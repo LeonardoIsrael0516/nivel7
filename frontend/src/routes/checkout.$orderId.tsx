@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { getOrderPaymentStatus } from "@/lib/public-api";
 import { useQuiz } from "@/contexts/QuizContext";
 import { cn } from "@/lib/utils";
+import { getMetaPixelSettings } from "@/lib/public-api";
+import type { MetaPixelSettings } from "@/lib/meta-pixel";
+import { metaPixelTrack } from "@/lib/meta-pixel";
 
 export const Route = createFileRoute("/checkout/$orderId")({
   component: CheckoutPage,
@@ -30,11 +33,29 @@ function CheckoutPage() {
   const [, setTick] = useState(0);
   const [justCopied, setJustCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pixelSettings, setPixelSettings] = useState<MetaPixelSettings | null>(null);
+  const initiatedCheckoutRef = useRef(false);
+  const purchasedRef = useRef(false);
 
   useEffect(() => {
     setCheckoutOrderId(orderId);
     setLastPath(`/checkout/${orderId}`);
   }, [orderId, setCheckoutOrderId, setLastPath]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const s = await getMetaPixelSettings();
+        if (!cancelled) setPixelSettings(s);
+      } catch {
+        // pixel opcional
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (pixReady && countdownEndsAt === null) {
@@ -63,7 +84,35 @@ function CheckoutPage() {
         setPlanName(data.planName);
         setCustomer(data.customer);
         setError(data.pixError ?? null);
+
+        if (!initiatedCheckoutRef.current && pixelSettings?.enabled && data.amountCents > 0) {
+          initiatedCheckoutRef.current = true;
+          metaPixelTrack(
+            "InitiateCheckout",
+            {
+              value: Math.round((data.amountCents / 100) * 100) / 100,
+              currency: "BRL",
+              content_name: data.planName,
+              order_id: data.orderId,
+            },
+            pixelSettings,
+          );
+        }
+
         if (data.status === "paid" && data.canAccessResults) {
+          if (!purchasedRef.current && pixelSettings?.enabled && data.amountCents > 0) {
+            purchasedRef.current = true;
+            metaPixelTrack(
+              "Purchase",
+              {
+                value: Math.round((data.amountCents / 100) * 100) / 100,
+                currency: "BRL",
+                content_name: data.planName,
+                order_id: data.orderId,
+              },
+              pixelSettings,
+            );
+          }
           setUnlockedOrderId(data.orderId);
           setLastPath("/result");
           await navigate({ to: "/result" });

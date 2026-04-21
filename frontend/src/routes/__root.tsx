@@ -1,7 +1,12 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { useRouterState } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { QuizProvider } from "../contexts/QuizContext";
+import { getMetaPixelSettings } from "@/lib/public-api";
+import type { MetaPixelSettings } from "@/lib/meta-pixel";
+import { metaPixelInit, metaPixelPageView } from "@/lib/meta-pixel";
 
 function NotFoundComponent() {
   return (
@@ -81,7 +86,49 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <QuizProvider>
+      <MetaPixelBootstrap />
       <Outlet />
     </QuizProvider>
   );
+}
+
+function MetaPixelBootstrap() {
+  const [settings, setSettings] = useState<MetaPixelSettings | null>(null);
+  const didInit = useRef(false);
+  const lastPathRef = useRef<string | null>(null);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const s = await getMetaPixelSettings();
+        if (cancelled) return;
+        setSettings(s);
+      } catch {
+        // pixel opcional
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!settings?.enabled) return;
+    if (!didInit.current) {
+      metaPixelInit(settings);
+      didInit.current = true;
+    }
+  }, [settings]);
+
+  useEffect(() => {
+    if (!settings?.enabled) return;
+    if (!didInit.current) return;
+    if (lastPathRef.current === pathname) return;
+    lastPathRef.current = pathname;
+    metaPixelPageView();
+  }, [pathname, settings]);
+
+  return null;
 }

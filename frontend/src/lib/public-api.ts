@@ -65,6 +65,14 @@ export async function getOrderPaymentStatus(orderId: string) {
   }>(`/payments/${orderId}/status`);
 }
 
+export async function getMetaPixelSettings() {
+  return request<{
+    enabled: boolean;
+    metaPixelId: string;
+    metaTestEventCode: string | null;
+  }>("/pixel/meta");
+}
+
 export type ResultAccessPlan = {
   id: string;
   code: "basico" | "completo";

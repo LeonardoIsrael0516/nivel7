@@ -58,3 +58,8 @@ Configurar no backend:
 ## Observações
 - O checkout final pode ser acoplado na etapa de oferta.
 - Reconciliacao de pagamentos está pronta por fila/job com Redis.
+
+
+cd /opt/nivel7
+git pull
+docker compose up -d --build

@@ -46,6 +46,19 @@ const accessTokenSchema = z.object({
 });
 
 export async function publicRoutes(app: FastifyInstance) {
+  app.get('/pixel/meta', async () => {
+    const row = await prisma.adminSetting.findUnique({ where: { key: 'pixel' } });
+    const value = (row?.value ?? {}) as Record<string, unknown>;
+    const enabled = Boolean(value.enabled);
+    const metaPixelId = typeof value.metaPixelId === 'string' ? value.metaPixelId.trim() : '';
+    const metaTestEventCode = typeof value.metaTestEventCode === 'string' ? value.metaTestEventCode.trim() : '';
+    return {
+      enabled: enabled && metaPixelId.length > 0,
+      metaPixelId,
+      metaTestEventCode: metaTestEventCode || null
+    };
+  });
+
   app.post('/leads', async (req, reply) => {
     const payload = leadSchema.parse(req.body);
     const lead = await prisma.lead.upsert({
