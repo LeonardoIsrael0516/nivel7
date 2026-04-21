@@ -29,9 +29,14 @@ function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
-      <form onSubmit={onSubmit} className="w-full max-w-md border border-border rounded-2xl p-6 bg-surface/40">
+      <form
+        onSubmit={onSubmit}
+        className="w-full max-w-md border border-border rounded-2xl p-6 bg-surface/40"
+      >
         <h1 className="font-display text-3xl mb-2">Nivel7</h1>
-        <p className="text-sm text-muted-foreground mb-6">Acesso protegido ao painel operacional.</p>
+        <p className="text-sm text-muted-foreground mb-6">
+          Acesso protegido ao painel operacional.
+        </p>
         <label className="block text-sm mb-1">Email</label>
         <input
           value={email}
@@ -49,7 +54,10 @@ function AdminLoginPage() {
           required
         />
         {error && <div className="text-sm text-red-400 mb-3">{error}</div>}
-        <button disabled={loading} className="w-full py-2 rounded-lg bg-gradient-blood text-primary-foreground">
+        <button
+          disabled={loading}
+          className="w-full py-2 rounded-lg bg-gradient-blood text-primary-foreground"
+        >
           {loading ? "Entrando..." : "Entrar no painel"}
         </button>
       </form>

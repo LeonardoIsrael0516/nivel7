@@ -148,7 +148,16 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       unlockedOrderId,
       lastPath,
     });
-  }, [answers, lead, leadId, quizSessionId, checkoutOrderId, unlockedOrderId, lastPath, isHydrated]);
+  }, [
+    answers,
+    lead,
+    leadId,
+    quizSessionId,
+    checkoutOrderId,
+    unlockedOrderId,
+    lastPath,
+    isHydrated,
+  ]);
 
   useEffect(() => {
     if (!isHydrated) return;

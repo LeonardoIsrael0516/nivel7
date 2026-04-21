@@ -3,7 +3,8 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../../lib/prisma.js';
 
 export async function loginAdmin(email: string, password: string) {
-  const admin = await prisma.adminUser.findUnique({ where: { email } });
+  const normalizedEmail = email.trim().toLowerCase();
+  const admin = await prisma.adminUser.findUnique({ where: { email: normalizedEmail } });
   if (!admin || !admin.isActive) return null;
   const valid = await argon2.verify(admin.passwordHash, password);
   if (!valid) return null;

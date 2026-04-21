@@ -61,31 +61,39 @@
 
   /* Blood red accent */
   --blood: oklch(0.58 0.22 25);
-  --blood-soft: oklch(0.50 0.18 25);
-  --crimson: oklch(0.45 0.20 22);
+  --blood-soft: oklch(0.5 0.18 25);
+  --crimson: oklch(0.45 0.2 22);
 
   --primary: oklch(0.58 0.22 25);
   --primary-foreground: oklch(0.98 0.005 0);
 
-  --secondary: oklch(0.20 0.008 25);
+  --secondary: oklch(0.2 0.008 25);
   --secondary-foreground: oklch(0.97 0.005 0);
 
-  --muted: oklch(0.20 0.008 25);
+  --muted: oklch(0.2 0.008 25);
   --muted-foreground: oklch(0.62 0.012 20);
 
   --accent: oklch(0.24 0.012 25);
   --accent-foreground: oklch(0.97 0.005 0);
 
-  --destructive: oklch(0.62 0.20 25);
+  --destructive: oklch(0.62 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
 
   --border: oklch(0.28 0.012 25 / 0.55);
-  --input: oklch(0.20 0.008 25);
+  --input: oklch(0.2 0.008 25);
   --ring: oklch(0.58 0.22 25 / 0.5);
 
-  --gradient-blood: linear-gradient(135deg, oklch(0.62 0.24 28), oklch(0.42 0.20 22));
-  --gradient-radial: radial-gradient(ellipse at top, oklch(0.22 0.04 25) 0%, oklch(0.13 0.005 25) 60%);
-  --gradient-hero: radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.40 0.18 25 / 0.30) 0%, transparent 70%);
+  --gradient-blood: linear-gradient(135deg, oklch(0.62 0.24 28), oklch(0.42 0.2 22));
+  --gradient-radial: radial-gradient(
+    ellipse at top,
+    oklch(0.22 0.04 25) 0%,
+    oklch(0.13 0.005 25) 60%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    oklch(0.4 0.18 25 / 0.3) 0%,
+    transparent 70%
+  );
 }
 
 @layer base {
@@ -107,7 +115,9 @@
     min-height: 100vh;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
     font-weight: 400;
@@ -136,7 +146,7 @@
   }
 
   .border-blood-subtle {
-    border-color: oklch(0.58 0.22 25 / 0.30);
+    border-color: oklch(0.58 0.22 25 / 0.3);
   }
 
   .animate-fade-in {
@@ -148,18 +158,33 @@
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes shimmer {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 
   .animate-shimmer {

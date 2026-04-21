@@ -37,8 +37,14 @@ function ProcessingPage() {
       <div className="max-w-md w-full text-center animate-fade-in">
         {/* Animated rings */}
         <div className="relative h-32 w-32 mx-auto mb-10">
-          <div className="absolute inset-0 rounded-full border border-blood/20 animate-ping" style={{ animationDuration: "2s" }} />
-          <div className="absolute inset-2 rounded-full border border-blood/40 animate-ping" style={{ animationDuration: "2.5s", animationDelay: "0.3s" }} />
+          <div
+            className="absolute inset-0 rounded-full border border-blood/20 animate-ping"
+            style={{ animationDuration: "2s" }}
+          />
+          <div
+            className="absolute inset-2 rounded-full border border-blood/40 animate-ping"
+            style={{ animationDuration: "2.5s", animationDelay: "0.3s" }}
+          />
           <div className="absolute inset-4 rounded-full border-2 border-blood animate-pulse" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="font-display text-2xl text-gradient-blood">N7</span>
@@ -48,7 +54,10 @@ function ProcessingPage() {
         <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
           Gerando seu diagnostico
         </div>
-        <p key={idx} className="text-lg text-foreground font-medium animate-fade-in min-h-[1.75rem]">
+        <p
+          key={idx}
+          className="text-lg text-foreground font-medium animate-fade-in min-h-[1.75rem]"
+        >
           {MESSAGES[idx]}
         </p>
 

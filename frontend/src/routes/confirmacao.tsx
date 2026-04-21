@@ -17,7 +17,13 @@ function ConfirmationPage() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="max-w-lg w-full text-center animate-slide-up">
         <div className="h-20 w-20 mx-auto mb-8 rounded-full bg-gradient-blood flex items-center justify-center glow-blood">
-          <svg className="h-10 w-10 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg
+            className="h-10 w-10 text-primary-foreground"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -31,9 +37,12 @@ function ConfirmationPage() {
         <p className="font-medium text-blood mb-8">{lead?.email ?? "seu email"}</p>
 
         <div className="rounded-xl border border-border bg-surface/60 p-6 mb-8 text-left">
-          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">Proximo passo</div>
+          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-3">
+            Proximo passo
+          </div>
           <p className="text-sm text-foreground/85 leading-relaxed">
-            Verifique sua caixa de entrada nos proximos minutos. No email voce encontra seu link de desbloqueio e o relatorio completo.
+            Verifique sua caixa de entrada nos proximos minutos. No email voce encontra seu link de
+            desbloqueio e o relatorio completo.
           </p>
         </div>
 

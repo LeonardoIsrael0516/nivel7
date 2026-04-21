@@ -72,7 +72,9 @@ function FullResultPage() {
       } catch (err) {
         const message = err instanceof Error ? err.message : "Link invalido ou expirado.";
         if (message.includes("token_already_used")) {
-          setError("Este link ja nao e valido. Solicite um novo envio pelo painel ou pelo suporte.");
+          setError(
+            "Este link ja nao e valido. Solicite um novo envio pelo painel ou pelo suporte.",
+          );
         } else if (message.includes("token_expired")) {
           setError("Seu link expirou. Solicite um novo envio para acessar o resultado.");
         } else if (message.includes("token_revoked")) {
@@ -91,7 +93,12 @@ function FullResultPage() {
 
   const report = useMemo(() => {
     if (!data) return null;
-    return buildResultReport(data.result.answers as QuizAnswers, data.score, data.planCode, data.answersComplete);
+    return buildResultReport(
+      data.result.answers as QuizAnswers,
+      data.score,
+      data.planCode,
+      data.answersComplete,
+    );
   }, [data]);
 
   async function goUpgradeCompleto() {
@@ -113,13 +120,18 @@ function FullResultPage() {
     }
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Carregando resultado...</div>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">Carregando resultado...</div>
+    );
   if (error || !data || !report) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="max-w-lg text-center">
           <h1 className="font-display text-4xl mb-3">Acesso indisponivel</h1>
-          <p className="text-muted-foreground mb-6">{error ?? "Nao foi possivel abrir seu resultado."}</p>
+          <p className="text-muted-foreground mb-6">
+            {error ?? "Nao foi possivel abrir seu resultado."}
+          </p>
           <Link to="/" className="inline-flex px-6 py-3 rounded-full border border-border">
             Voltar ao inicio
           </Link>
@@ -136,8 +148,8 @@ function FullResultPage() {
       <main className="max-w-3xl mx-auto">
         <div className="text-xs uppercase tracking-[0.25em] text-blood mb-3">{data.planName}</div>
         <h1 className="font-display text-4xl md:text-5xl mb-4">
-          {data.lead.name}, seu{" "}
-          {isCompleto ? "Poder de Atracao completo" : "Nivel de Aparencia"} foi desbloqueado.
+          {data.lead.name}, seu {isCompleto ? "Poder de Atracao completo" : "Nivel de Aparencia"}{" "}
+          foi desbloqueado.
         </h1>
         <p className="text-muted-foreground mb-8">
           {isCompleto
@@ -154,8 +166,12 @@ function FullResultPage() {
         )}
 
         <div className="rounded-2xl border border-blood-subtle bg-surface p-8 mb-8">
-          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Nivel de Aparencia</div>
-          <div className="font-display text-7xl text-gradient-blood">{data.score.notaFinal.toFixed(1)} / 10</div>
+          <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            Nivel de Aparencia
+          </div>
+          <div className="font-display text-7xl text-gradient-blood">
+            {data.score.notaFinal.toFixed(1)} / 10
+          </div>
           <p className="mt-6 text-foreground/85 leading-relaxed">{report.headlineSummary}</p>
         </div>
 
@@ -177,7 +193,9 @@ function FullResultPage() {
         {report.practicalTips.length > 0 && (
           <section className="rounded-2xl border border-border p-6 mb-8">
             <h2 className="font-display text-2xl mb-2">Top 5 melhorias praticas</h2>
-            <p className="text-xs text-muted-foreground mb-4">Priorize nesta ordem nos proximos 7 dias.</p>
+            <p className="text-xs text-muted-foreground mb-4">
+              Priorize nesta ordem nos proximos 7 dias.
+            </p>
             <ol className="list-decimal pl-5 space-y-3 text-foreground/85 text-sm">
               {report.practicalTips.map((t, i) => (
                 <li key={i}>{t}</li>
@@ -189,15 +207,21 @@ function FullResultPage() {
         {isCompleto && report.completo && (
           <>
             <section className="rounded-2xl border border-blood-subtle bg-surface/40 p-6 mb-8">
-              <div className="text-xs uppercase tracking-[0.2em] text-blood mb-2">Perfil de atracao</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-blood mb-2">
+                Perfil de atracao
+              </div>
               <h2 className="font-display text-3xl mb-2">{report.completo.archetypeTitle}</h2>
               <p className="text-foreground/80 mb-4">{data.score.insight}</p>
-              <p className="text-foreground/75 text-sm leading-relaxed">{report.completo.archetypeDeep}</p>
+              <p className="text-foreground/75 text-sm leading-relaxed">
+                {report.completo.archetypeDeep}
+              </p>
             </section>
 
             <section className="rounded-2xl border border-border p-6 mb-8">
               <h2 className="font-display text-xl mb-2">{report.completo.blockingTitle}</h2>
-              <p className="text-foreground/80 text-sm leading-relaxed">{report.completo.blockingBody}</p>
+              <p className="text-foreground/80 text-sm leading-relaxed">
+                {report.completo.blockingBody}
+              </p>
             </section>
 
             <section className="rounded-2xl border border-border p-6 mb-8">
@@ -211,14 +235,19 @@ function FullResultPage() {
 
             <section className="rounded-2xl border border-border p-6 mb-8">
               <h2 className="font-display text-xl mb-2">{report.completo.firstImpressionTitle}</h2>
-              <p className="text-foreground/80 text-sm leading-relaxed">{report.completo.firstImpressionBody}</p>
+              <p className="text-foreground/80 text-sm leading-relaxed">
+                {report.completo.firstImpressionBody}
+              </p>
             </section>
 
             <section className="rounded-2xl border border-blood-subtle p-6 mb-8">
               <h2 className="font-display text-xl mb-2">{report.completo.simulationTitle}</h2>
-              <p className="text-foreground/80 text-sm leading-relaxed mb-2">{report.completo.simulationBody}</p>
+              <p className="text-foreground/80 text-sm leading-relaxed mb-2">
+                {report.completo.simulationBody}
+              </p>
               <p className="text-xs text-muted-foreground">
-                Projecao de nota: ate {report.completo.projectedNote.toFixed(1)}/10 · referencia de impacto percebido +{report.completo.attractionLiftPercent}%.
+                Projecao de nota: ate {report.completo.projectedNote.toFixed(1)}/10 · referencia de
+                impacto percebido +{report.completo.attractionLiftPercent}%.
               </p>
             </section>
           </>
@@ -228,7 +257,9 @@ function FullResultPage() {
           <section className="rounded-2xl border border-blood-subtle bg-surface/50 p-8 text-center">
             <h2 className="font-display text-2xl mb-2">Quer o nivel completo?</h2>
             <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
-              Desbloqueie o plano <strong className="text-foreground">Poder de Atracao</strong>: arquetipo expandido, bloqueios, plano em 7 dias, leitura do primeiro contato e simulacao de evolucao — alinhado ao que prometemos na oferta.
+              Desbloqueie o plano <strong className="text-foreground">Poder de Atracao</strong>:
+              arquetipo expandido, bloqueios, plano em 7 dias, leitura do primeiro contato e
+              simulacao de evolucao — alinhado ao que prometemos na oferta.
             </p>
             {upgradeError && (
               <p className="text-sm text-destructive mb-4 max-w-md mx-auto">{upgradeError}</p>

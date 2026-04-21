@@ -13,7 +13,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
-export async function createLead(payload: { name: string; email: string; source?: string; consent?: boolean }) {
+export async function createLead(payload: {
+  name: string;
+  email: string;
+  source?: string;
+  consent?: boolean;
+}) {
   return request<{ id: string; email: string; name: string }>("/leads", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -32,11 +37,17 @@ export async function createQuizSession(payload: {
   });
 }
 
-export async function createOrder(payload: { quizSessionId: string; planCode: "basico" | "completo" }) {
-  return request<{ orderId: string; status: string; amountCents: number; planCode: string }>("/orders", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+export async function createOrder(payload: {
+  quizSessionId: string;
+  planCode: "basico" | "completo";
+}) {
+  return request<{ orderId: string; status: string; amountCents: number; planCode: string }>(
+    "/orders",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  );
 }
 
 export async function getOrderPaymentStatus(orderId: string) {
@@ -75,4 +86,3 @@ export async function consumeResultAccessToken(token: string) {
     body: JSON.stringify({ token }),
   });
 }
-

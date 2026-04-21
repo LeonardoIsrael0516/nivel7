@@ -12,7 +12,10 @@ export function QuizShell({ children, step, total }: Props) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="px-6 md:px-10 py-6 flex items-center justify-between">
-        <Link to="/" className="font-display text-lg tracking-tight text-foreground/90 hover:text-blood transition-colors">
+        <Link
+          to="/"
+          className="font-display text-lg tracking-tight text-foreground/90 hover:text-blood transition-colors"
+        >
           Nivel<span className="text-gradient-blood">7</span>
         </Link>
         <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground hidden md:block">

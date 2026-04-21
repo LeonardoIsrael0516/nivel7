@@ -10,10 +10,7 @@ function LandingPage() {
   const { isHydrated, lastPath, reset } = useQuiz();
 
   const showResumePrompt =
-    isHydrated &&
-    lastPath &&
-    lastPath !== "/" &&
-    !lastPath.startsWith("/resultado-completo");
+    isHydrated && lastPath && lastPath !== "/" && !lastPath.startsWith("/resultado-completo");
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,9 +28,12 @@ function LandingPage() {
       <main className="flex-1 flex flex-col items-center justify-center px-6 md:px-10 text-center">
         {showResumePrompt && (
           <div className="w-full max-w-3xl mb-8 rounded-2xl border border-blood-subtle bg-surface/60 px-5 py-4 text-left animate-slide-up">
-            <div className="text-sm font-medium text-foreground mb-1">Voce tem um diagnostico em andamento</div>
+            <div className="text-sm font-medium text-foreground mb-1">
+              Voce tem um diagnostico em andamento
+            </div>
             <p className="text-xs text-muted-foreground mb-4">
-              Continue de onde parou ou apague o progresso salvo neste aparelho e recomece o quiz do zero.
+              Continue de onde parou ou apague o progresso salvo neste aparelho e recomece o quiz do
+              zero.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button
@@ -62,12 +62,14 @@ function LandingPage() {
           </div>
 
           <h1 className="font-display text-5xl md:text-7xl leading-[1.05] mb-6">
-            Descubra <span className="italic text-gradient-blood">por que</span><br />
+            Descubra <span className="italic text-gradient-blood">por que</span>
+            <br />
             voce nao atrai.
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-10 leading-relaxed">
-            Uma analise brutalmente honesta da sua aparencia e do que esta reduzindo seu poder de atracao, com o que ajustar nos proximos 7 dias.
+            Uma analise brutalmente honesta da sua aparencia e do que esta reduzindo seu poder de
+            atracao, com o que ajustar nos proximos 7 dias.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -77,7 +79,13 @@ function LandingPage() {
               className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-blood text-primary-foreground font-medium text-base tracking-wide hover:opacity-95 transition-all glow-blood"
             >
               Quero meu diagnostico
-              <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg
+                className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -90,7 +98,10 @@ function LandingPage() {
               { label: "Brutalmente honesto", desc: "Sem floreio, sem desrespeito" },
               { label: "Suas fotos privadas", desc: "Nunca publicas" },
             ].map((item) => (
-              <div key={item.label} className="text-left p-5 rounded-xl border border-border/60 bg-surface/40 backdrop-blur-sm">
+              <div
+                key={item.label}
+                className="text-left p-5 rounded-xl border border-border/60 bg-surface/40 backdrop-blur-sm"
+              >
                 <div className="text-sm font-medium text-foreground mb-1">{item.label}</div>
                 <div className="text-xs text-muted-foreground">{item.desc}</div>
               </div>
@@ -106,11 +117,26 @@ function LandingPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { n: "01", t: "Responda o quiz", d: "14 perguntas curtas que mapeiam estilo, presenca e percepcao." },
-              { n: "02", t: "Envie ate 3 fotos", d: "Calibracao visual com leitura de presenca e simetria." },
-              { n: "03", t: "Receba seu diagnostico", d: "Nota real, arquetipo de atracao e plano de 7 dias." },
+              {
+                n: "01",
+                t: "Responda o quiz",
+                d: "14 perguntas curtas que mapeiam estilo, presenca e percepcao.",
+              },
+              {
+                n: "02",
+                t: "Envie ate 3 fotos",
+                d: "Calibracao visual com leitura de presenca e simetria.",
+              },
+              {
+                n: "03",
+                t: "Receba seu diagnostico",
+                d: "Nota real, arquetipo de atracao e plano de 7 dias.",
+              },
             ].map((s) => (
-              <div key={s.n} className="p-7 rounded-2xl border border-border bg-surface/50 hover:border-blood-subtle transition-all">
+              <div
+                key={s.n}
+                className="p-7 rounded-2xl border border-border bg-surface/50 hover:border-blood-subtle transition-all"
+              >
                 <div className="font-display text-3xl text-gradient-blood mb-4">{s.n}</div>
                 <div className="font-medium mb-2">{s.t}</div>
                 <div className="text-sm text-muted-foreground leading-relaxed">{s.d}</div>

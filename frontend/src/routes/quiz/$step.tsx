@@ -40,7 +40,9 @@ function QuizStepPage() {
       <QuizShell step={stepNum} total={TOTAL_QUIZ_STEPS}>
         <div className="text-center">
           <p className="text-muted-foreground mb-6">Pergunta nao encontrada.</p>
-          <Link to="/" className="text-blood underline">Voltar ao inicio</Link>
+          <Link to="/" className="text-blood underline">
+            Voltar ao inicio
+          </Link>
         </div>
       </QuizShell>
     );
@@ -68,9 +70,7 @@ function QuizStepPage() {
             Inicio rapido para calibrar seu Nivel de Aparencia
           </p>
         )}
-        <h1 className="font-display text-3xl md:text-4xl leading-tight mb-10">
-          {question.title}
-        </h1>
+        <h1 className="font-display text-3xl md:text-4xl leading-tight mb-10">{question.title}</h1>
         <div className="space-y-3">
           {question.options.map((opt, i) => (
             <QuizOption

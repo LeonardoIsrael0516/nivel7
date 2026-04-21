@@ -31,10 +31,17 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Por que voce nao atrai? — Analise Brutal de Aparencia" },
-      { name: "description", content: "Descubra sua nota real de atracao e o que ajustar nos proximos 7 dias. Diagnostico personalizado em menos de 3 minutos." },
+      {
+        name: "description",
+        content:
+          "Descubra sua nota real de atracao e o que ajustar nos proximos 7 dias. Diagnostico personalizado em menos de 3 minutos.",
+      },
       { name: "author", content: "Nivel7" },
       { property: "og:title", content: "Por que voce nao atrai?" },
-      { property: "og:description", content: "Analise brutalmente honesta da sua aparencia + plano pratico de atracao." },
+      {
+        property: "og:description",
+        content: "Analise brutalmente honesta da sua aparencia + plano pratico de atracao.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@nivel7" },

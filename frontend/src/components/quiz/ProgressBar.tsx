@@ -3,7 +3,9 @@ export function ProgressBar({ current, total }: { current: number; total: number
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        <span>Etapa {current} de {total}</span>
+        <span>
+          Etapa {current} de {total}
+        </span>
         <span>{Math.round(pct)}%</span>
       </div>
       <div className="h-[2px] w-full bg-border/40 overflow-hidden rounded-full">

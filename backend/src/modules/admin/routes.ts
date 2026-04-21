@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
+import argon2 from 'argon2';
 import { extractBareEmail, resolveSmtpConfig, sendMailWithResolvedSmtp } from '../../lib/smtp-config.js';
 import { loginAdmin, requireAdminAuth } from './auth.js';
 import { reconcilePaymentQueue, resultUnlockEmailJobOpts, sendResultEmailQueue } from '../queue/queues.js';
@@ -17,6 +18,47 @@ export async function adminRoutes(app: FastifyInstance) {
 
   await app.register(async (protectedRoutes) => {
     protectedRoutes.addHook('preHandler', requireAdminAuth);
+
+    protectedRoutes.get('/me', async (req) => {
+      const userId = (req as any).user?.sub as string | undefined;
+      if (!userId) return { id: '', email: '' };
+      const admin = await prisma.adminUser.findUnique({ where: { id: userId } });
+      return { id: admin?.id ?? '', email: admin?.email ?? '' };
+    });
+
+    protectedRoutes.patch('/me', async (req, reply) => {
+      const userId = (req as any).user?.sub as string | undefined;
+      if (!userId) return reply.unauthorized('admin_auth_required');
+
+      const body = z
+        .object({
+          currentPassword: z.string().min(8),
+          newEmail: z.string().email().optional(),
+          newPassword: z.string().min(8).optional()
+        })
+        .refine((v) => v.newEmail || v.newPassword, { message: 'no_changes' })
+        .parse(req.body);
+
+      const admin = await prisma.adminUser.findUnique({ where: { id: userId } });
+      if (!admin || !admin.isActive) return reply.unauthorized('invalid_credentials');
+      const valid = await argon2.verify(admin.passwordHash, body.currentPassword);
+      if (!valid) return reply.unauthorized('invalid_credentials');
+
+      const update: { email?: string; passwordHash?: string } = {};
+      if (body.newEmail) update.email = body.newEmail.trim().toLowerCase();
+      if (body.newPassword) update.passwordHash = await argon2.hash(body.newPassword);
+
+      try {
+        const updated = await prisma.adminUser.update({ where: { id: admin.id }, data: update });
+        return reply.send({ ok: true, email: updated.email });
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (msg.includes('Unique constraint') || msg.toLowerCase().includes('unique')) {
+          return reply.code(409).send({ ok: false, error: 'email_in_use' });
+        }
+        throw e;
+      }
+    });
 
     protectedRoutes.get('/plans', async () => prisma.plan.findMany({ orderBy: { createdAt: 'asc' } }));
     protectedRoutes.post('/plans', async (req) => {

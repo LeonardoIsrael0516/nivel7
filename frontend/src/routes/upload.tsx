@@ -23,7 +23,7 @@ function UploadPage() {
           const r = new FileReader();
           r.onload = () => resolve(r.result as string);
           r.readAsDataURL(f);
-        })
+        }),
     );
     Promise.all(readers).then((urls) => {
       const next = [...photos, ...urls].slice(0, 3);
@@ -55,10 +55,12 @@ function UploadPage() {
           Etapa essencial do Nivel de Aparencia
         </div>
         <h1 className="font-display text-3xl md:text-4xl leading-tight mb-3">
-          Envie ate 3 fotos para <span className="italic text-gradient-blood">calibrar</span> seu nivel real.
+          Envie ate 3 fotos para <span className="italic text-gradient-blood">calibrar</span> seu
+          nivel real.
         </h1>
         <p className="text-muted-foreground mb-8">
-          Esta etapa vem cedo porque sua leitura visual e a base do diagnostico. Minimo de 1 foto para continuar.
+          Esta etapa vem cedo porque sua leitura visual e a base do diagnostico. Minimo de 1 foto
+          para continuar.
         </p>
 
         <ul className="space-y-2 mb-8 text-sm text-muted-foreground">
@@ -116,7 +118,11 @@ function UploadPage() {
           disabled={photos.length >= 3}
           className="w-full py-4 rounded-full border border-blood-subtle bg-surface hover:bg-surface-elevated transition-all text-foreground font-medium disabled:opacity-40 disabled:cursor-not-allowed mb-3"
         >
-          {photos.length === 0 ? "Selecionar fotos" : photos.length >= 3 ? "Limite atingido (3)" : "Adicionar mais"}
+          {photos.length === 0
+            ? "Selecionar fotos"
+            : photos.length >= 3
+              ? "Limite atingido (3)"
+              : "Adicionar mais"}
         </button>
 
         {error && <p className="text-sm text-destructive mb-4 text-center">{error}</p>}
@@ -134,7 +140,9 @@ function UploadPage() {
 
         <div className="mt-5 text-center">
           <button
-            onClick={() => navigate({ to: "/quiz/$step", params: { step: String(UPLOAD_STEP - 1) } })}
+            onClick={() =>
+              navigate({ to: "/quiz/$step", params: { step: String(UPLOAD_STEP - 1) } })
+            }
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             ← Voltar uma etapa

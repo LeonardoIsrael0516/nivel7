@@ -17,9 +17,15 @@ function LeadPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome.trim()) { setError("Digite seu nome"); return; }
+    if (!nome.trim()) {
+      setError("Digite seu nome");
+      return;
+    }
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!ok) { setError("Digite um email valido"); return; }
+    if (!ok) {
+      setError("Digite um email valido");
+      return;
+    }
     setError(null);
     setLead({ nome: nome.trim(), email: email.trim() });
     navigate({ to: "/quiz/$step", params: { step: String(LEAD_STEP + 1) } });
@@ -36,7 +42,8 @@ function LeadPage() {
           Ultima etapa antes do resultado
         </div>
         <h1 className="font-display text-3xl md:text-4xl leading-tight mb-3">
-          Seu resultado <span className="italic text-gradient-blood">personalizado</span> esta quase pronto.
+          Seu resultado <span className="italic text-gradient-blood">personalizado</span> esta quase
+          pronto.
         </h1>
         <p className="text-muted-foreground mb-10">
           Confirme seus dados para receber seu diagnostico e o link de desbloqueio.
@@ -44,7 +51,9 @@ function LeadPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Nome</label>
+            <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Nome
+            </label>
             <input
               type="text"
               value={nome}
@@ -55,7 +64,9 @@ function LeadPage() {
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Email</label>
+            <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Email
+            </label>
             <input
               type="email"
               value={email}

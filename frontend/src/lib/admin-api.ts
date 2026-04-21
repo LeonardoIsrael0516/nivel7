@@ -84,13 +84,28 @@ export async function adminLogin(email: string, password: string) {
   return data;
 }
 
+export async function getAdminMe() {
+  return request<{ id: string; email: string }>("/admin/me");
+}
+
+export async function updateAdminMe(payload: {
+  currentPassword: string;
+  newEmail?: string;
+  newPassword?: string;
+}) {
+  return request<{ ok: true; email: string }>("/admin/me", {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getAdminPlans() {
   return request<AdminPlan[]>("/admin/plans");
 }
 
 export async function updateAdminPlan(
   id: string,
-  payload: { name?: string; priceCents?: number; isActive?: boolean }
+  payload: { name?: string; priceCents?: number; isActive?: boolean },
 ) {
   return request<AdminPlan>(`/admin/plans/${id}`, {
     method: "PATCH",
@@ -103,10 +118,13 @@ export async function getAdminOrders() {
 }
 
 export async function approveOrderPayment(orderId: string) {
-  return request<{ ok: boolean; updated: boolean; status: string }>(`/admin/orders/${orderId}/approve-payment`, {
-    method: "POST",
-    body: JSON.stringify({}),
-  });
+  return request<{ ok: boolean; updated: boolean; status: string }>(
+    `/admin/orders/${orderId}/approve-payment`,
+    {
+      method: "POST",
+      body: JSON.stringify({}),
+    },
+  );
 }
 
 export async function resendOrderResultEmail(orderId: string) {
@@ -118,7 +136,7 @@ export async function resendOrderResultEmail(orderId: string) {
 
 export async function getIntegrationStatus() {
   return request<{ smtpConfigured: boolean; cajuPayConfigured: boolean; pixelConfigured: boolean }>(
-    "/admin/integrations/status"
+    "/admin/integrations/status",
   );
 }
 

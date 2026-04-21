@@ -21,13 +21,23 @@ export function quizAnswersLookComplete(answers: QuizAnswers): boolean {
 }
 
 const STYLE_MAP: Record<string, number> = {
-  muito_bom: 8.2, bom: 7.2, medio: 6.2, fraco: 5.6, muito_fraco: 5.1,
+  muito_bom: 8.2,
+  bom: 7.2,
+  medio: 6.2,
+  fraco: 5.6,
+  muito_fraco: 5.1,
 };
 const PRESENCE_MAP: Record<string, number> = {
-  confianca: 8.0, neutralidade: 6.4, inseguranca: 5.4,
+  confianca: 8.0,
+  neutralidade: 6.4,
+  inseguranca: 5.4,
 };
 const SYMMETRY_MAP: Record<string, number> = {
-  muito_bem: 7.8, bem: 7.1, ok: 6.4, mal: 5.8, muito_mal: 5.3,
+  muito_bem: 7.8,
+  bem: 7.1,
+  ok: 6.4,
+  mal: 5.8,
+  muito_mal: 5.3,
 };
 
 export type ScoreResult = {
@@ -40,11 +50,34 @@ export type ScoreResult = {
 };
 
 const ARCHETYPES = [
-  { id: "atracao_silenciosa", name: "Atracao Silenciosa", insight: "Voce desperta interesse, mas nao fixa atencao. Falta uma assinatura visual que marque." },
-  { id: "potencial_negligenciado", name: "Potencial Negligenciado", insight: "Sua base e melhor do que voce mostra. Pequenos ajustes geram um salto desproporcional." },
-  { id: "presenca_neutra", name: "Presenca Neutra", insight: "Voce nao afasta, mas tambem nao marca. Sua imagem comunica neutralidade quando precisa comunicar intencao." },
-  { id: "intensidade_desalinhada", name: "Intensidade Desalinhada", insight: "Sua energia e forte, mas a leitura visual nao acompanha. Voce confunde quem te ve." },
-  { id: "imagem_inconsistente", name: "Imagem Inconsistente", insight: "Seu cuidado e irregular, e isso gera leitura confusa nos primeiros segundos." },
+  {
+    id: "atracao_silenciosa",
+    name: "Atracao Silenciosa",
+    insight:
+      "Voce desperta interesse, mas nao fixa atencao. Falta uma assinatura visual que marque.",
+  },
+  {
+    id: "potencial_negligenciado",
+    name: "Potencial Negligenciado",
+    insight:
+      "Sua base e melhor do que voce mostra. Pequenos ajustes geram um salto desproporcional.",
+  },
+  {
+    id: "presenca_neutra",
+    name: "Presenca Neutra",
+    insight:
+      "Voce nao afasta, mas tambem nao marca. Sua imagem comunica neutralidade quando precisa comunicar intencao.",
+  },
+  {
+    id: "intensidade_desalinhada",
+    name: "Intensidade Desalinhada",
+    insight: "Sua energia e forte, mas a leitura visual nao acompanha. Voce confunde quem te ve.",
+  },
+  {
+    id: "imagem_inconsistente",
+    name: "Imagem Inconsistente",
+    insight: "Seu cuidado e irregular, e isso gera leitura confusa nos primeiros segundos.",
+  },
 ];
 
 export function calculateScore(answers: QuizAnswers): ScoreResult {
@@ -59,7 +92,10 @@ export function calculateScore(answers: QuizAnswers): ScoreResult {
     presencaScore -= 0.2;
   }
   if (answers.q09_primeiroContato === "amigavel_nao_marcante") presencaScore -= 0.5;
-  if (answers.q13_tempoMelhora === "7_dias" && ["alta", "total"].includes(answers.q14_disposicaoAjustar)) {
+  if (
+    answers.q13_tempoMelhora === "7_dias" &&
+    ["alta", "total"].includes(answers.q14_disposicaoAjustar)
+  ) {
     presencaScore += 0.3;
   }
 
@@ -69,13 +105,23 @@ export function calculateScore(answers: QuizAnswers): ScoreResult {
 
   // archetype selection (simplified)
   let archetype = ARCHETYPES[2]; // default presenca neutra
-  if (answers.q06_frequenciaCuidado === "baixa" && ["aleatorio", "pratico_sem_estilo"].includes(answers.q07_roupaDiaADia)) {
+  if (
+    answers.q06_frequenciaCuidado === "baixa" &&
+    ["aleatorio", "pratico_sem_estilo"].includes(answers.q07_roupaDiaADia)
+  ) {
     archetype = ARCHETYPES[4];
-  } else if (answers.q10_chamaAtencao === "sempre" && ["intimidante_distante", "confuso"].includes(answers.q09_primeiroContato)) {
+  } else if (
+    answers.q10_chamaAtencao === "sempre" &&
+    ["intimidante_distante", "confuso"].includes(answers.q09_primeiroContato)
+  ) {
     archetype = ARCHETYPES[3];
   } else if (estiloScore <= 6.0 && simetriaScore >= 6.4) {
     archetype = ARCHETYPES[1];
-  } else if (presencaScore >= 6.0 && presencaScore <= 7.0 && ["educado_neutro", "amigavel_nao_marcante"].includes(answers.q09_primeiroContato)) {
+  } else if (
+    presencaScore >= 6.0 &&
+    presencaScore <= 7.0 &&
+    ["educado_neutro", "amigavel_nao_marcante"].includes(answers.q09_primeiroContato)
+  ) {
     archetype = ARCHETYPES[0];
   } else if (presencaScore < 6.0 && estiloScore >= 6.0 && estiloScore <= 7.0) {
     archetype = ARCHETYPES[2];

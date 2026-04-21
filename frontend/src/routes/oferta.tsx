@@ -48,7 +48,17 @@ function OfferPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const focusCompleto = search.focus === "completo";
-  const { answers, lead, leadId, setLead, setLeadId, quizSessionId, setQuizSessionId, setCheckoutOrderId, setLastPath } = useQuiz();
+  const {
+    answers,
+    lead,
+    leadId,
+    setLead,
+    setLeadId,
+    quizSessionId,
+    setQuizSessionId,
+    setCheckoutOrderId,
+    setLastPath,
+  } = useQuiz();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,7 +85,9 @@ function OfferPage() {
   useEffect(() => {
     if (!focusCompleto) return;
     const id = window.setTimeout(() => {
-      document.getElementById("plan-completo")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document
+        .getElementById("plan-completo")
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 120);
     return () => window.clearTimeout(id);
   }, [focusCompleto]);
@@ -91,7 +103,12 @@ function OfferPage() {
     try {
       let currentLeadId = leadId;
       if (!currentLeadId) {
-        const createdLead = await createLead({ name: lead.nome, email: lead.email, consent: true, source: "quiz" });
+        const createdLead = await createLead({
+          name: lead.nome,
+          email: lead.email,
+          consent: true,
+          source: "quiz",
+        });
         currentLeadId = createdLead.id;
         setLeadId(createdLead.id);
       }
@@ -136,13 +153,16 @@ function OfferPage() {
 
       <main className="flex-1 max-w-5xl mx-auto w-full animate-slide-up">
         <div className="text-center mb-12">
-          <div className="text-xs uppercase tracking-[0.25em] text-blood mb-4">Escolha seu desbloqueio</div>
+          <div className="text-xs uppercase tracking-[0.25em] text-blood mb-4">
+            Escolha seu desbloqueio
+          </div>
           <h1 className="font-display text-4xl md:text-5xl leading-tight mb-4">
             Voce ja viu o <span className="italic">spoiler</span>.<br />
             Agora veja o <span className="text-gradient-blood">jogo completo</span>.
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Comece pelo seu Nivel de Aparencia e depois desbloqueie o upgrade completo se quiser aprofundar.
+            Comece pelo seu Nivel de Aparencia e depois desbloqueie o upgrade completo se quiser
+            aprofundar.
           </p>
         </div>
 
@@ -150,53 +170,61 @@ function OfferPage() {
           {PLANS.map((plan) => {
             const featured = focusCompleto ? plan.id === "completo" : plan.id === "basico";
             return (
-            <div
-              key={plan.id}
-              id={plan.id === "completo" ? "plan-completo" : "plan-basico"}
-              className={`relative rounded-2xl p-8 border transition-all ${
-                featured
-                  ? "border-blood bg-surface-elevated glow-blood"
-                  : "border-border bg-surface/60"
-              }`}
-            >
-              {featured && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-blood text-primary-foreground text-xs uppercase tracking-[0.2em] font-medium">
-                  {focusCompleto ? "Upgrade recomendado" : "Produto principal"}
-                </div>
-              )}
-
-              <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
-                {plan.tagline}
-              </div>
-              <h3 className="font-display text-2xl mb-4">{plan.name}</h3>
-              <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-border">
-                <span className="font-display text-4xl">{plan.price}</span>
-                <span className="text-sm text-muted-foreground">unico</span>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-3 text-sm">
-                    <svg className={`h-4 w-4 mt-0.5 shrink-0 ${featured ? "text-blood" : "text-foreground/60"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className={featured ? "text-foreground" : "text-foreground/80"}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => startCheckout(plan.id as "basico" | "completo")}
-                disabled={loadingPlan !== null}
-                className={`w-full py-4 rounded-full font-medium tracking-wide transition-all ${
+              <div
+                key={plan.id}
+                id={plan.id === "completo" ? "plan-completo" : "plan-basico"}
+                className={`relative rounded-2xl p-8 border transition-all ${
                   featured
-                    ? "bg-gradient-blood text-primary-foreground glow-blood hover:opacity-95"
-                    : "border border-border text-foreground hover:bg-surface-elevated hover:border-blood-subtle"
-                } ${loadingPlan !== null ? "opacity-70 cursor-not-allowed" : ""}`}
+                    ? "border-blood bg-surface-elevated glow-blood"
+                    : "border-border bg-surface/60"
+                }`}
               >
-                {loadingPlan === plan.id ? "Gerando checkout..." : plan.cta}
-              </button>
-            </div>
+                {featured && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-blood text-primary-foreground text-xs uppercase tracking-[0.2em] font-medium">
+                    {focusCompleto ? "Upgrade recomendado" : "Produto principal"}
+                  </div>
+                )}
+
+                <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                  {plan.tagline}
+                </div>
+                <h3 className="font-display text-2xl mb-4">{plan.name}</h3>
+                <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-border">
+                  <span className="font-display text-4xl">{plan.price}</span>
+                  <span className="text-sm text-muted-foreground">unico</span>
+                </div>
+
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 text-sm">
+                      <svg
+                        className={`h-4 w-4 mt-0.5 shrink-0 ${featured ? "text-blood" : "text-foreground/60"}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className={featured ? "text-foreground" : "text-foreground/80"}>
+                        {f}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => startCheckout(plan.id as "basico" | "completo")}
+                  disabled={loadingPlan !== null}
+                  className={`w-full py-4 rounded-full font-medium tracking-wide transition-all ${
+                    featured
+                      ? "bg-gradient-blood text-primary-foreground glow-blood hover:opacity-95"
+                      : "border border-border text-foreground hover:bg-surface-elevated hover:border-blood-subtle"
+                  } ${loadingPlan !== null ? "opacity-70 cursor-not-allowed" : ""}`}
+                >
+                  {loadingPlan === plan.id ? "Gerando checkout..." : plan.cta}
+                </button>
+              </div>
             );
           })}
         </div>

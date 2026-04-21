@@ -31,13 +31,16 @@ function ResultPage() {
           {lead?.nome ? `${lead.nome}, este e o seu spoiler.` : "Este e o seu spoiler."}
         </p>
         <h1 className="font-display text-4xl md:text-5xl leading-tight mb-10">
-          Voce nao esta sendo ignorado(a) por <span className="italic text-gradient-blood">falta de beleza</span>.
+          Voce nao esta sendo ignorado(a) por{" "}
+          <span className="italic text-gradient-blood">falta de beleza</span>.
         </h1>
 
         {/* Score Card */}
         <div className="rounded-2xl border border-blood-subtle bg-surface p-8 md:p-10 mb-6 glow-blood">
           <div className="flex items-baseline gap-4 mb-6">
-            <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Sua nota parcial</div>
+            <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+              Sua nota parcial
+            </div>
           </div>
           <div className="flex items-end gap-3 mb-8">
             <span className="font-display text-7xl md:text-8xl text-gradient-blood leading-none">
@@ -53,10 +56,15 @@ function ResultPage() {
               { label: "Presenca", val: result.presencaScore },
             ].map((p) => (
               <div key={p.label}>
-                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">{p.label}</div>
+                <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                  {p.label}
+                </div>
                 <div className="font-display text-2xl">{p.val.toFixed(1)}</div>
                 <div className="mt-2 h-1 bg-border/50 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-blood" style={{ width: `${(p.val / 10) * 100}%` }} />
+                  <div
+                    className="h-full bg-gradient-blood"
+                    style={{ width: `${(p.val / 10) * 100}%` }}
+                  />
                 </div>
               </div>
             ))}
@@ -64,12 +72,12 @@ function ResultPage() {
 
           <div className="space-y-4">
             <div>
-              <div className="text-xs uppercase tracking-[0.2em] text-blood mb-2">Seu arquetipo</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-blood mb-2">
+                Seu arquetipo
+              </div>
               <div className="font-display text-2xl">{result.archetype.name}</div>
             </div>
-            <p className="text-foreground/85 leading-relaxed text-lg italic">
-              "{result.insight}"
-            </p>
+            <p className="text-foreground/85 leading-relaxed text-lg italic">"{result.insight}"</p>
           </div>
         </div>
 
@@ -90,13 +98,29 @@ function ResultPage() {
                   : "border-border bg-surface/40"
               }`}
             >
-              <svg className="h-5 w-5 text-blood shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <svg
+                className="h-5 w-5 text-blood shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
               </svg>
               <div className="flex flex-col">
-                <span className={item.primary ? "text-foreground font-medium" : "text-foreground/70"}>{item.label}</span>
+                <span
+                  className={item.primary ? "text-foreground font-medium" : "text-foreground/70"}
+                >
+                  {item.label}
+                </span>
                 {item.primary && (
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-blood mt-1">Produto principal</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-blood mt-1">
+                    Produto principal
+                  </span>
                 )}
               </div>
               <span className="ml-auto text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -122,7 +146,8 @@ function ResultPage() {
           </button>
         )}
         <p className="text-xs text-muted-foreground/60 text-center mt-4">
-          Relatorio gerado para seu momento atual. Recomendado desbloquear enquanto os dados estao frescos.
+          Relatorio gerado para seu momento atual. Recomendado desbloquear enquanto os dados estao
+          frescos.
         </p>
       </main>
     </div>
