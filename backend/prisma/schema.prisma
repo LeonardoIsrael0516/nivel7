@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  source      String?
+  consent     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  quizSession QuizSession?
+}
+
+model QuizSession {
+  id         String   @id @default(cuid())
+  leadId     String   @unique
+  answers    Json
+  score      Float?
+  archetype  String?
+  status     String   @default("started")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  orders     Order[]
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  priceCents  Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Order {
+  id                String               @id @default(cuid())
+  quizSessionId     String
+  planId            String
+  amountCents       Int
+  currency          String               @default("BRL")
+  status            String               @default("pending")
+  paidAt            DateTime?
+  idempotencyKey    String               @unique
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  quizSession       QuizSession          @relation(fields: [quizSessionId], references: [id], onDelete: Cascade)
+  plan              Plan                 @relation(fields: [planId], references: [id], onDelete: Restrict)
+  paymentTxs        PaymentTransaction[]
+  accessTokens      ResultAccessToken[]
+}
+
+model PaymentTransaction {
+  id              String   @id @default(cuid())
+  orderId         String
+  gateway         String
+  paymentId       String?
+  pspReference    String?
+  status          String
+  requestPayload  Json?
+  responsePayload Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model EmailLog {
+  id          String   @id @default(cuid())
+  template    String
+  recipient   String
+  status      String
+  providerId  String?
+  payload     Json?
+  createdAt   DateTime @default(now())
+}
+
+model PixelEvent {
+  id         String   @id @default(cuid())
+  eventName  String
+  payload    Json
+  status     String   @default("pending")
+  sentAt     DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model JobRun {
+  id         String   @id @default(cuid())
+  jobType    String
+  attempts   Int      @default(0)
+  status     String
+  error      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AdminSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ResultAccessToken {
+  id         String   @id @default(cuid())
+  orderId    String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}

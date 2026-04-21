@@ -1,0 +1,453 @@
+{
+  "product": {
+    "id": "nivel7",
+    "name": "Por que voce nao atrai?",
+    "subtitle": "Analise Brutal de Aparencia + Poder de Atracao",
+    "version": "1.0.0"
+  },
+  "settings": {
+    "maxQuestions": 14,
+    "minPhotos": 1,
+    "maxPhotos": 3,
+    "displayOneQuestionPerScreen": true,
+    "progressBarEnabled": true,
+    "leadCaptureAfterQuestionIndex": 9,
+    "scoreClamp": {
+      "min": 4.8,
+      "max": 8.9
+    },
+    "roundingDecimals": 1
+  },
+  "scoringModel": {
+    "pillars": {
+      "estiloScore": 0.35,
+      "simetriaScore": 0.25,
+      "presencaScore": 0.4
+    },
+    "derivedRules": [
+      {
+        "id": "rule_estilo_from_style_self_assessment",
+        "description": "Define base de estilo pela autoavaliacao de estilo atual.",
+        "sourceQuestionId": "q04_estiloAtual",
+        "map": {
+          "muito_bom": { "estiloScore": 8.2 },
+          "bom": { "estiloScore": 7.2 },
+          "medio": { "estiloScore": 6.2 },
+          "fraco": { "estiloScore": 5.6 },
+          "muito_fraco": { "estiloScore": 5.1 }
+        }
+      },
+      {
+        "id": "rule_presenca_from_posture",
+        "description": "Define base de presenca pela leitura de postura/expressao.",
+        "sourceQuestionId": "q08_posturaExpressao",
+        "map": {
+          "confianca": { "presencaScore": 8.0 },
+          "neutralidade": { "presencaScore": 6.4 },
+          "inseguranca": { "presencaScore": 5.4 }
+        }
+      },
+      {
+        "id": "rule_simetria_proxy_from_photo_comfort",
+        "description": "Aproximacao de simetria via conforto em fotos (proxy de expressao/fotogenia no MVP).",
+        "sourceQuestionId": "q05_aparenciaFotos",
+        "map": {
+          "muito_bem": { "simetriaScore": 7.8 },
+          "bem": { "simetriaScore": 7.1 },
+          "ok": { "simetriaScore": 6.4 },
+          "mal": { "simetriaScore": 5.8 },
+          "muito_mal": { "simetriaScore": 5.3 }
+        }
+      },
+      {
+        "id": "rule_care_consistency",
+        "description": "Cria variavel de consistencia de cuidado.",
+        "sourceQuestionId": "q06_frequenciaCuidado",
+        "map": {
+          "alta": { "consistenciaCuidado": "alto" },
+          "media": { "consistenciaCuidado": "medio" },
+          "baixa": { "consistenciaCuidado": "baixo" }
+        }
+      },
+      {
+        "id": "rule_confidence_declared",
+        "description": "Cria variavel de confianca declarada.",
+        "sourceQuestionId": "q10_chamaAtencao",
+        "map": {
+          "sempre": { "confiancaDeclarada": "alta" },
+          "as_vezes": { "confiancaDeclarada": "media" },
+          "quase_nunca": { "confiancaDeclarada": "baixa" }
+        }
+      }
+    ],
+    "adjustments": [
+      {
+        "id": "adj_style_care_low",
+        "if": {
+          "all": [
+            { "var": "consistenciaCuidado", "eq": "baixo" }
+          ]
+        },
+        "apply": {
+          "estiloScore": -0.4,
+          "presencaScore": -0.2
+        }
+      },
+      {
+        "id": "adj_social_perception_friend_zone",
+        "if": {
+          "all": [
+            { "questionId": "q09_primeiroContato", "eq": "amigavel_nao_marcante" }
+          ]
+        },
+        "apply": {
+          "presencaScore": -0.5
+        }
+      },
+      {
+        "id": "adj_intent_urgency_boost",
+        "if": {
+          "all": [
+            { "questionId": "q13_tempoMelhora", "eq": "7_dias" },
+            { "questionId": "q14_disposicaoAjustar", "in": ["alta", "total"] }
+          ]
+        },
+        "apply": {
+          "presencaScore": 0.3
+        }
+      }
+    ]
+  },
+  "archetypes": [
+    {
+      "id": "atracao_silenciosa",
+      "name": "Atracao Silenciosa",
+      "criteria": {
+        "all": [
+          { "var": "presencaScore", "gte": 6.0, "lte": 7.0 },
+          { "questionId": "q09_primeiroContato", "in": ["educado_neutro", "amigavel_nao_marcante"] }
+        ]
+      }
+    },
+    {
+      "id": "potencial_negligenciado",
+      "name": "Potencial Negligenciado",
+      "criteria": {
+        "all": [
+          { "var": "estiloScore", "lte": 6.0 },
+          { "var": "simetriaScore", "gte": 6.4 }
+        ]
+      }
+    },
+    {
+      "id": "presenca_neutra",
+      "name": "Presenca Neutra",
+      "criteria": {
+        "all": [
+          { "var": "presencaScore", "lt": 6.0 },
+          { "var": "estiloScore", "gte": 6.0, "lte": 7.0 }
+        ]
+      }
+    },
+    {
+      "id": "intensidade_desalinhada",
+      "name": "Intensidade Desalinhada",
+      "criteria": {
+        "all": [
+          { "var": "confiancaDeclarada", "eq": "alta" },
+          { "questionId": "q09_primeiroContato", "in": ["intimidante_distante", "confuso"] }
+        ]
+      }
+    },
+    {
+      "id": "imagem_inconsistente",
+      "name": "Imagem Inconsistente",
+      "criteria": {
+        "all": [
+          { "var": "consistenciaCuidado", "eq": "baixo" },
+          { "questionId": "q07_roupaDiaADia", "in": ["aleatorio", "pratico_sem_estilo"] }
+        ]
+      }
+    }
+  ],
+  "questions": [
+    {
+      "id": "q01_genero",
+      "step": 1,
+      "type": "single_choice",
+      "required": true,
+      "title": "Qual seu genero?",
+      "options": [
+        { "id": "homem", "label": "Homem" },
+        { "id": "mulher", "label": "Mulher" },
+        { "id": "outro", "label": "Outro" },
+        { "id": "prefiro_nao_dizer", "label": "Prefiro nao dizer" }
+      ]
+    },
+    {
+      "id": "q02_faixaEtaria",
+      "step": 2,
+      "type": "single_choice",
+      "required": true,
+      "title": "Qual sua faixa etaria?",
+      "options": [
+        { "id": "18_24", "label": "18-24" },
+        { "id": "25_30", "label": "25-30" },
+        { "id": "31_38", "label": "31-38" },
+        { "id": "39_plus", "label": "39+" }
+      ]
+    },
+    {
+      "id": "q03_objetivoAtual",
+      "step": 3,
+      "type": "single_choice",
+      "required": true,
+      "title": "Hoje, seu foco e:",
+      "options": [
+        { "id": "relacionamento_serio", "label": "Relacionamento serio" },
+        { "id": "conhecer_pessoas", "label": "Conhecer pessoas" },
+        { "id": "autoconfianca", "label": "Melhorar autoconfianca" },
+        { "id": "poder_social", "label": "Aumentar poder social" }
+      ]
+    },
+    {
+      "id": "q04_estiloAtual",
+      "step": 4,
+      "type": "single_choice",
+      "required": true,
+      "title": "Como voce avalia seu estilo atual?",
+      "options": [
+        { "id": "muito_bom", "label": "Muito bom" },
+        { "id": "bom", "label": "Bom" },
+        { "id": "medio", "label": "Medio" },
+        { "id": "fraco", "label": "Fraco" },
+        { "id": "muito_fraco", "label": "Muito fraco" }
+      ]
+    },
+    {
+      "id": "q05_aparenciaFotos",
+      "step": 5,
+      "type": "single_choice",
+      "required": true,
+      "title": "Como voce se sente com sua aparencia em fotos?",
+      "options": [
+        { "id": "muito_bem", "label": "Fico muito bem" },
+        { "id": "bem", "label": "Fico bem" },
+        { "id": "ok", "label": "Fico ok" },
+        { "id": "mal", "label": "Nao gosto muito" },
+        { "id": "muito_mal", "label": "Quase nunca gosto" }
+      ]
+    },
+    {
+      "id": "q06_frequenciaCuidado",
+      "step": 6,
+      "type": "single_choice",
+      "required": true,
+      "title": "Com que frequencia cuida de cabelo, barba e pele?",
+      "options": [
+        { "id": "alta", "label": "Sempre, toda semana" },
+        { "id": "media", "label": "As vezes, sem rotina fixa" },
+        { "id": "baixa", "label": "Quase nunca" }
+      ]
+    },
+    {
+      "id": "q07_roupaDiaADia",
+      "step": 7,
+      "type": "single_choice",
+      "required": true,
+      "title": "Como costuma se vestir no dia a dia?",
+      "options": [
+        { "id": "estrategico", "label": "Escolho pensando na imagem" },
+        { "id": "equilibrado", "label": "Conforto com um pouco de estilo" },
+        { "id": "pratico_sem_estilo", "label": "So praticidade" },
+        { "id": "aleatorio", "label": "Depende, sem padrao" }
+      ]
+    },
+    {
+      "id": "q08_posturaExpressao",
+      "step": 8,
+      "type": "single_choice",
+      "required": true,
+      "title": "Sua postura e expressao transmitem mais:",
+      "options": [
+        { "id": "confianca", "label": "Confianca" },
+        { "id": "neutralidade", "label": "Neutralidade" },
+        { "id": "inseguranca", "label": "Inseguranca" }
+      ]
+    },
+    {
+      "id": "q09_primeiroContato",
+      "step": 9,
+      "type": "single_choice",
+      "required": true,
+      "title": "Como as pessoas te percebem no primeiro contato?",
+      "options": [
+        { "id": "marcante", "label": "Marcante e interessante" },
+        { "id": "educado_neutro", "label": "Educado(a), mas neutro(a)" },
+        { "id": "amigavel_nao_marcante", "label": "Amigavel, porem pouco marcante" },
+        { "id": "intimidante_distante", "label": "Distante ou dificil de ler" },
+        { "id": "confuso", "label": "Nao sei, recebo sinais mistos" }
+      ]
+    },
+    {
+      "id": "lead_nome_email",
+      "step": 10,
+      "type": "lead_capture",
+      "required": true,
+      "title": "Seu resultado personalizado esta quase pronto",
+      "fields": [
+        { "id": "nome", "type": "text", "required": true, "placeholder": "Seu nome" },
+        { "id": "email", "type": "email", "required": true, "placeholder": "Seu melhor email" }
+      ],
+      "microcopy": "Para enviar seu diagnostico e seu link de desbloqueio, confirme seus dados."
+    },
+    {
+      "id": "q10_chamaAtencao",
+      "step": 11,
+      "type": "single_choice",
+      "required": true,
+      "title": "Voce sente que chama atencao quando chega em um ambiente?",
+      "options": [
+        { "id": "sempre", "label": "Sim, quase sempre" },
+        { "id": "as_vezes", "label": "As vezes" },
+        { "id": "quase_nunca", "label": "Quase nunca" }
+      ]
+    },
+    {
+      "id": "q11_bloqueioAtual",
+      "step": 12,
+      "type": "single_choice",
+      "required": true,
+      "title": "Qual seu maior bloqueio hoje para atracao?",
+      "options": [
+        { "id": "estilo", "label": "Estilo/visual" },
+        { "id": "confianca", "label": "Confianca e postura" },
+        { "id": "fotos_redes", "label": "Fotos e presenca online" },
+        { "id": "comunicacao", "label": "Comunicacao social" }
+      ]
+    },
+    {
+      "id": "q12_tipoPessoa",
+      "step": 13,
+      "type": "single_choice",
+      "required": true,
+      "title": "Que tipo de pessoa voce quer atrair?",
+      "options": [
+        { "id": "segura", "label": "Pessoa segura e decidida" },
+        { "id": "carinhosa", "label": "Pessoa carinhosa e estavel" },
+        { "id": "ambiciosa", "label": "Pessoa ambiciosa e confiante" },
+        { "id": "sem_rotulo", "label": "Sem um tipo fixo, quero mais conexoes" }
+      ]
+    },
+    {
+      "id": "q13_tempoMelhora",
+      "step": 14,
+      "type": "single_choice",
+      "required": true,
+      "title": "Em quanto tempo quer perceber melhora?",
+      "options": [
+        { "id": "7_dias", "label": "Em 7 dias" },
+        { "id": "15_dias", "label": "Em 15 dias" },
+        { "id": "30_dias", "label": "Em 30 dias" },
+        { "id": "sem_pressa", "label": "Sem pressa, mas quero evoluir" }
+      ]
+    },
+    {
+      "id": "q14_disposicaoAjustar",
+      "step": 15,
+      "type": "single_choice",
+      "required": true,
+      "title": "Quanto esta disposto(a) a ajustar sua apresentacao nos proximos 7 dias?",
+      "options": [
+        { "id": "total", "label": "Totalmente disposto(a)" },
+        { "id": "alta", "label": "Disposto(a) a mudar bastante" },
+        { "id": "media", "label": "Posso ajustar algumas coisas" },
+        { "id": "baixa", "label": "Pouca disposicao agora" }
+      ]
+    },
+    {
+      "id": "photo_upload",
+      "step": 16,
+      "type": "photo_upload",
+      "required": true,
+      "title": "Envie ate 3 fotos para calibrar seu diagnostico",
+      "constraints": {
+        "min": 1,
+        "max": 3
+      },
+      "guidelines": [
+        "Rosto visivel e boa iluminacao",
+        "Use pelo menos um angulo frontal",
+        "Se possivel, inclua uma foto de meio corpo"
+      ]
+    }
+  ],
+  "outputTemplates": {
+    "teaser": [
+      "Sua nota inicial e {notaFinal}/10.",
+      "Voce nao esta longe do proximo nivel, mas seu padrao atual ainda nao cria impacto consistente.",
+      "Desbloqueie para ver o plano exato de melhoria para os proximos 7 dias."
+    ],
+    "insightPool": [
+      "Sua imagem transmite potencial, mas sem assinatura visual forte.",
+      "Seu maior gargalo nao e beleza: e presenca percebida.",
+      "Voce passa confianca em partes, mas nao de forma previsivel.",
+      "Seu estilo atual comunica neutralidade quando voce precisa comunicar intencao."
+    ],
+    "improvementPool": [
+      "Padronize cabelo e acabamento facial para elevar consistencia.",
+      "Ajuste postura em fotos: ombros, queixo e contato visual.",
+      "Troque pecas sem identidade por base visual coerente.",
+      "Atualize foto de perfil principal com luz frontal e expressao firme."
+    ],
+    "encouragementPool": [
+      "Seu caso e altamente ajustavel com mudancas simples.",
+      "Voce esta mais perto da melhora do que imagina.",
+      "Nao precisa mudar quem voce e, apenas como comunica isso.",
+      "Com execucao de 7 dias, seu salto de percepcao tende a ser nitido."
+    ]
+  },
+  "offerConfig": {
+    "plans": [
+      {
+        "id": "basico",
+        "name": "Nivel de Aparencia",
+        "cta": "Desbloquear minha nota completa",
+        "features": [
+          "Nota geral com explicacao",
+          "Analise estilo, simetria e presenca",
+          "Top 5 melhorias praticas"
+        ]
+      },
+      {
+        "id": "completo",
+        "name": "Poder de Atracao",
+        "highlight": true,
+        "badge": "Mais escolhido",
+        "cta": "Quero meu plano de atracao completo",
+        "features": [
+          "Tudo do plano basico",
+          "Perfil de atracao",
+          "Bloqueios de atracao",
+          "Plano de 7 dias",
+          "Primeira impressao social",
+          "Simulacao de evolucao"
+        ]
+      }
+    ]
+  },
+  "emailTemplates": {
+    "deliveryInitial": {
+      "subject": "Seu Raio-X de Atracao esta pronto",
+      "body": "{nome}, seu diagnostico inicial foi concluido.\nSua nota parcial: {notaFinal}/10.\nSeu principal ponto de atencao: {insight}.\n\nPara ver seu relatorio completo e seu plano de melhoria, desbloqueie aqui:\n{linkDesbloqueio}"
+    },
+    "recoveryD1": {
+      "subject": "Voce viu isso no seu resultado?",
+      "body": "Seu perfil mostrou um padrao que poucas pessoas percebem sozinhas:\n{ganchoBloqueio}.\n\nSeu plano completo continua disponivel:\n{linkDesbloqueio}"
+    },
+    "lastCall": {
+      "subject": "Ultima chance de desbloquear seu plano",
+      "body": "Seu diagnostico foi gerado com base no seu momento atual.\nSe quiser aplicar os ajustes com clareza, este e o melhor momento:\n{linkDesbloqueio}"
+    }
+  }
+}
