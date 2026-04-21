@@ -42,7 +42,8 @@ function ConfirmationPage() {
           </div>
           <p className="text-sm text-foreground/85 leading-relaxed">
             Verifique sua caixa de entrada nos proximos minutos. No email voce encontra seu link de
-            desbloqueio e o relatorio completo.
+            desbloqueio e o relatorio completo. Se nao aparecer, olhe tambem a caixa de{" "}
+            <strong>Spam</strong>.
           </p>
         </div>
 
