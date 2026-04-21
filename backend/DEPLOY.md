@@ -5,7 +5,7 @@
 Com o repositorio publico no GitHub (troque `USUARIO` e `REPO`):
 
 ```bash
-sudo NIVEL7_REPO_URL=https://github.com/USUARIO/REPO.git bash -c "$(curl -fsSL https://raw.githubusercontent.com/USUARIO/REPO/main/scripts/vps-docker-install.sh)"
+sudo NIVEL7_REPO_URL=https://github.com/LeonardoIsrael0516/nivel7.git bash -c "$(curl -fsSL https://raw.githubusercontent.com/LeonardoIsrael0516/nivel7/main/scripts/vps-docker-install.sh)"
 ```
 
 O script instala Docker/Compose, pergunta URLs do backend e frontend, configura MySQL/Redis via `docker-compose.yml`, gera **JWT** e cria o `backend/.env`. Depois sobe `backend` + `worker` + `mysql` + `redis` e executa `prisma migrate deploy` + `db:seed`.
