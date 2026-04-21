@@ -73,6 +73,17 @@ export async function getMetaPixelSettings() {
   }>("/pixel/meta");
 }
 
+export async function getPublicPlans() {
+  return request<
+    Array<{
+      id: string;
+      code: "basico" | "completo";
+      name: string;
+      priceCents: number;
+    }>
+  >("/plans");
+}
+
 export type ResultAccessPlan = {
   id: string;
   code: "basico" | "completo";

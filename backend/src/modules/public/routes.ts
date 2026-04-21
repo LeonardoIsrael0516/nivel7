@@ -59,6 +59,19 @@ export async function publicRoutes(app: FastifyInstance) {
     };
   });
 
+  app.get('/plans', async () => {
+    const plans = await prisma.plan.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: 'asc' }
+    });
+    return plans.map((p) => ({
+      id: p.id,
+      code: p.code,
+      name: p.name,
+      priceCents: p.priceCents
+    }));
+  });
+
   app.post('/leads', async (req, reply) => {
     const payload = leadSchema.parse(req.body);
     const lead = await prisma.lead.upsert({

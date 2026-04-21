@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuiz } from "@/contexts/QuizContext";
 import { UPGRADE_CHECKOUT_STORAGE_KEY } from "@/lib/result-report";
 import { calculateScore } from "@/lib/scoring";
-import { createLead, createOrder, createQuizSession } from "@/lib/public-api";
+import { createLead, createOrder, createQuizSession, getPublicPlans } from "@/lib/public-api";
 
 export const Route = createFileRoute("/oferta")({
   component: OfferPage,
@@ -17,7 +17,6 @@ const PLANS = [
     id: "basico",
     name: "Nivel de Aparencia",
     tagline: "Produto principal",
-    price: "R$ 27",
     cta: "Quero meu Nivel de Aparencia",
     features: [
       "Nota geral com explicacao",
@@ -30,7 +29,6 @@ const PLANS = [
     id: "completo",
     name: "Poder de Atracao",
     tagline: "Upgrade avancado",
-    price: "R$ 47",
     cta: "Quero meu plano completo",
     features: [
       "Tudo do plano basico",
@@ -43,6 +41,15 @@ const PLANS = [
     highlight: false,
   },
 ];
+
+function formatBRLFromCents(valueCents: number) {
+  const value = valueCents / 100;
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: value % 1 === 0 ? 0 : 2,
+  }).format(value);
+}
 
 function OfferPage() {
   const navigate = useNavigate();
@@ -61,6 +68,9 @@ function OfferPage() {
   } = useQuiz();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [livePlans, setLivePlans] = useState<
+    Partial<Record<"basico" | "completo", { name: string; priceCents: number }>>
+  >({});
 
   useEffect(() => {
     setLastPath("/oferta");
@@ -81,6 +91,28 @@ function OfferPage() {
       // ignore bad JSON
     }
   }, [setLastPath, setLead, setLeadId, setQuizSessionId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const plans = await getPublicPlans();
+        if (cancelled) return;
+        const next: Partial<Record<"basico" | "completo", { name: string; priceCents: number }>> = {};
+        for (const p of plans) {
+          if (p.code === "basico" || p.code === "completo") {
+            next[p.code] = { name: p.name, priceCents: p.priceCents };
+          }
+        }
+        setLivePlans(next);
+      } catch {
+        // fallback: usa o texto do frontend se API indisponivel
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!focusCompleto) return;
@@ -169,6 +201,9 @@ function OfferPage() {
         <div className="grid md:grid-cols-2 gap-5">
           {PLANS.map((plan) => {
             const featured = focusCompleto ? plan.id === "completo" : plan.id === "basico";
+            const live = livePlans[plan.id as "basico" | "completo"];
+            const planName = live?.name || plan.name;
+            const planPrice = live?.priceCents ? formatBRLFromCents(live.priceCents) : "—";
             return (
               <div
                 key={plan.id}
@@ -188,9 +223,9 @@ function OfferPage() {
                 <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
                   {plan.tagline}
                 </div>
-                <h3 className="font-display text-2xl mb-4">{plan.name}</h3>
+                <h3 className="font-display text-2xl mb-4">{planName}</h3>
                 <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-border">
-                  <span className="font-display text-4xl">{plan.price}</span>
+                  <span className="font-display text-4xl">{planPrice}</span>
                   <span className="text-sm text-muted-foreground">unico</span>
                 </div>
 
