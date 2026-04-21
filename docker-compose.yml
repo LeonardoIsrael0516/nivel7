@@ -23,9 +23,9 @@ services:
       - redis_data:/data
 
   backend:
+    container_name: nivel7-backend
     build:
       context: ./backend
-      container_name: nivel7-backend
     restart: unless-stopped
     env_file:
       - ./backend/.env
@@ -37,9 +37,9 @@ services:
 
   # BullMQ: processa filas (e-mail pos-pagamento, PIX, reconciliacao). Obrigatorio para resultado chegar ao e-mail.
   worker:
+    container_name: nivel7-worker
     build:
       context: ./backend
-    container_name: nivel7-worker
     restart: unless-stopped
     env_file:
       - ./backend/.env
