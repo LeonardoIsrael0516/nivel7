@@ -10,6 +10,10 @@ sudo NIVEL7_REPO_URL=https://github.com/LeonardoIsrael0516/nivel7.git bash -c "$
 
 O script instala Docker/Compose, pergunta URLs do backend e frontend, configura MySQL/Redis via `docker-compose.yml`, gera **JWT** e cria o `backend/.env`. Depois sobe `backend` + `worker` + `mysql` + `redis` e executa `prisma migrate deploy` + `db:seed`.
 
+### Porta publica do backend
+
+Para evitar problemas com proxy/CDN (Cloudflare) em portas nao padrao, publique a API em **80** (HTTP) e use HTTPS no proxy (Caddy/Nginx) ou no CDN.
+
 ### Variavel importante no frontend
 
 No build/deploy do frontend, configure:

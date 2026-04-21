@@ -165,7 +165,7 @@ main() {
   [[ -n "$FRONTEND_URL" ]] || abort "URL do frontend e obrigatoria."
   FRONTEND_URL="$(strip_slash "$FRONTEND_URL")"
 
-  prompt BACKEND_PORT "Porta externa para expor a API (Docker publish), ex.: 4000" "4000"
+  prompt BACKEND_PORT "Porta externa para expor a API (Docker publish). Recomendo 80 para dominio" "80"
 
   local APP_ORIGINS_DEF="$FRONTEND_URL"
   prompt APP_ORIGINS "APP_ORIGINS (CORS; use virgula para varias origens)" "$APP_ORIGINS_DEF"
