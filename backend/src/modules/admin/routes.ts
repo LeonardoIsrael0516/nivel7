@@ -176,10 +176,12 @@ export async function adminRoutes(app: FastifyInstance) {
 
     protectedRoutes.get('/settings', async () => {
       const rows = await prisma.adminSetting.findMany();
-      const byKey = new Map(rows.map((r) => [r.key, r.value as Record<string, unknown>]));
-      const caju = byKey.get('cajupay') ?? {};
-      const smtp = byKey.get('smtp') ?? {};
-      const pixel = byKey.get('pixel') ?? {};
+      const byKey = new Map<string, Record<string, unknown>>(
+        rows.map((r: { key: string; value: unknown }) => [r.key, (r.value ?? {}) as Record<string, unknown>])
+      );
+      const caju = (byKey.get('cajupay') ?? {}) as Record<string, unknown>;
+      const smtp = (byKey.get('smtp') ?? {}) as Record<string, unknown>;
+      const pixel = (byKey.get('pixel') ?? {}) as Record<string, unknown>;
 
       const mask = (value?: unknown) => {
         if (typeof value !== 'string' || value.length === 0) return '';
@@ -189,24 +191,24 @@ export async function adminRoutes(app: FastifyInstance) {
 
       return {
         cajuPay: {
-          baseUrl: caju.baseUrl ?? '',
+          baseUrl: (caju.baseUrl as string | undefined) ?? '',
           apiKeyMasked: mask(caju.apiKey),
           apiSecretMasked: mask(caju.apiSecret)
         },
         smtp: {
-          host: smtp.host ?? '',
-          port: smtp.port ?? '',
-          user: smtp.user ?? '',
+          host: (smtp.host as string | undefined) ?? '',
+          port: (smtp.port as number | string | undefined) ?? '',
+          user: (smtp.user as string | undefined) ?? '',
           passMasked: mask(smtp.pass),
-          from: smtp.from ?? ''
+          from: (smtp.from as string | undefined) ?? ''
         },
         pixel: {
-          provider: pixel.provider ?? '',
+          provider: (pixel.provider as string | undefined) ?? '',
           tokenMasked: mask(pixel.token),
-          enabled: pixel.enabled ?? false,
-          metaPixelId: pixel.metaPixelId ?? '',
+          enabled: (pixel.enabled as boolean | undefined) ?? false,
+          metaPixelId: (pixel.metaPixelId as string | undefined) ?? '',
           metaAccessTokenMasked: mask(pixel.metaAccessToken),
-          metaTestEventCode: pixel.metaTestEventCode ?? ''
+          metaTestEventCode: (pixel.metaTestEventCode as string | undefined) ?? ''
         }
       };
     });
