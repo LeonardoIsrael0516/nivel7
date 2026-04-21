@@ -5,7 +5,10 @@ import { FastifyInstance } from 'fastify';
 import { env } from '../env.js';
 
 export async function securityPlugins(app: FastifyInstance) {
-  await app.register(helmet);
+  // API e consumida por um frontend em outro dominio; CORP same-origin quebra fetch mesmo com CORS.
+  await app.register(helmet, {
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+  });
   await app.register(cors, {
     origin: (origin, cb) => {
       if (!origin) {
