@@ -39,11 +39,11 @@ Veja `backend/DEPLOY.md` e o instalador `scripts/vps-docker-install.sh`.
 
 - **Root Directory**: `frontend`
 - **Build Command**: `npm run build`
-- **Output Directory**: `dist/client`
+- **Output Directory**: `.output`
 - **Env**:
   - `VITE_API_BASE_URL=https://SEU_BACKEND/api`
 
-O arquivo `frontend/vercel.json` já inclui o `outputDirectory` e rewrite de SPA.
+O arquivo `frontend/vercel.json` já inclui o `outputDirectory` para Vercel (TanStack Start + Nitro).
 
 ## Rotas admin no frontend
 - `/admin/login`
