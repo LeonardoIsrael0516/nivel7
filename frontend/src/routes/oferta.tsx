@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import { useQuiz } from "@/contexts/QuizContext";
 import { UPGRADE_CHECKOUT_STORAGE_KEY } from "@/lib/result-report";
 import { calculateScore } from "@/lib/scoring";
-import { createLead, createOrder, createQuizSession, getPublicPlans } from "@/lib/public-api";
+import type { PublicPlanRow } from "@/lib/public-api";
+import {
+  createLead,
+  createOrder,
+  createQuizSession,
+  ensurePublicPlansLoaded,
+  getPublicPlansSnapshot,
+  waitForOrderPixReady,
+} from "@/lib/public-api";
 
 export const Route = createFileRoute("/oferta")({
   component: OfferPage,
@@ -51,6 +59,17 @@ function formatBRLFromCents(valueCents: number) {
   }).format(value);
 }
 
+function plansRowsToLivePlans(plans: PublicPlanRow[] | null) {
+  const next: Partial<Record<"basico" | "completo", { name: string; priceCents: number }>> = {};
+  if (!plans) return next;
+  for (const p of plans) {
+    if (p.code === "basico" || p.code === "completo") {
+      next[p.code] = { name: p.name, priceCents: p.priceCents };
+    }
+  }
+  return next;
+}
+
 function OfferPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
@@ -70,7 +89,7 @@ function OfferPage() {
   const [error, setError] = useState<string | null>(null);
   const [livePlans, setLivePlans] = useState<
     Partial<Record<"basico" | "completo", { name: string; priceCents: number }>>
-  >({});
+  >(() => plansRowsToLivePlans(getPublicPlansSnapshot()));
 
   useEffect(() => {
     setLastPath("/oferta");
@@ -96,15 +115,9 @@ function OfferPage() {
     let cancelled = false;
     void (async () => {
       try {
-        const plans = await getPublicPlans();
+        const plans = await ensurePublicPlansLoaded();
         if (cancelled) return;
-        const next: Partial<Record<"basico" | "completo", { name: string; priceCents: number }>> = {};
-        for (const p of plans) {
-          if (p.code === "basico" || p.code === "completo") {
-            next[p.code] = { name: p.name, priceCents: p.priceCents };
-          }
-        }
-        setLivePlans(next);
+        setLivePlans(plansRowsToLivePlans(plans));
       } catch {
         // fallback: usa o texto do frontend se API indisponivel
       }
@@ -159,6 +172,7 @@ function OfferPage() {
       }
 
       const order = await createOrder({ quizSessionId: currentQuizSessionId, planCode });
+      await waitForOrderPixReady(order.orderId);
       setCheckoutOrderId(order.orderId);
       setLastPath(`/checkout/${order.orderId}`);
       await navigate({ to: "/checkout/$orderId", params: { orderId: order.orderId } });
@@ -257,7 +271,7 @@ function OfferPage() {
                       : "border border-border text-foreground hover:bg-surface-elevated hover:border-blood-subtle"
                   } ${loadingPlan !== null ? "opacity-70 cursor-not-allowed" : ""}`}
                 >
-                  {loadingPlan === plan.id ? "Gerando checkout..." : plan.cta}
+                  {loadingPlan === plan.id ? "Preparando pagamento..." : plan.cta}
                 </button>
               </div>
             );

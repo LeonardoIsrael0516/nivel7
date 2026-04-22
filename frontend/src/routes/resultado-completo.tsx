@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuiz } from "@/contexts/QuizContext";
 import type { QuizAnswers } from "@/contexts/QuizContext";
-import { consumeResultAccessToken, createOrder } from "@/lib/public-api";
+import { consumeResultAccessToken, createOrder, waitForOrderPixReady } from "@/lib/public-api";
 import { buildResultReport } from "@/lib/result-report";
 import {
   calculateScore,
@@ -110,6 +110,7 @@ function FullResultPage() {
       setLeadId(data.leadId);
       setQuizSessionId(data.quizSessionId);
       const order = await createOrder({ quizSessionId: data.quizSessionId, planCode: "completo" });
+      await waitForOrderPixReady(order.orderId);
       setCheckoutOrderId(order.orderId);
       setLastPath(`/checkout/${order.orderId}`);
       await navigate({ to: "/checkout/$orderId", params: { orderId: order.orderId } });
@@ -270,7 +271,7 @@ function FullResultPage() {
               onClick={() => void goUpgradeCompleto()}
               className="inline-flex px-8 py-3 rounded-full bg-gradient-blood text-primary-foreground font-medium tracking-wide disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {upgradeBusy ? "A preparar checkout…" : "Quero o Poder de Atracao completo"}
+              {upgradeBusy ? "A preparar pagamento…" : "Quero o Poder de Atracao completo"}
             </button>
           </section>
         )}

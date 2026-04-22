@@ -34,8 +34,13 @@ function CheckoutPage() {
   const [justCopied, setJustCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pixelSettings, setPixelSettings] = useState<MetaPixelSettings | null>(null);
+  const pixelSettingsRef = useRef<MetaPixelSettings | null>(null);
   const initiatedCheckoutRef = useRef(false);
   const purchasedRef = useRef(false);
+
+  useEffect(() => {
+    pixelSettingsRef.current = pixelSettings;
+  }, [pixelSettings]);
 
   useEffect(() => {
     setCheckoutOrderId(orderId);
@@ -85,7 +90,8 @@ function CheckoutPage() {
         setCustomer(data.customer);
         setError(data.pixError ?? null);
 
-        if (!initiatedCheckoutRef.current && pixelSettings?.enabled && data.amountCents > 0) {
+        const pixel = pixelSettingsRef.current;
+        if (!initiatedCheckoutRef.current && pixel?.enabled && data.amountCents > 0) {
           initiatedCheckoutRef.current = true;
           metaPixelTrack(
             "InitiateCheckout",
@@ -95,12 +101,12 @@ function CheckoutPage() {
               content_name: data.planName,
               order_id: data.orderId,
             },
-            pixelSettings,
+            pixel,
           );
         }
 
         if (data.status === "paid" && data.canAccessResults) {
-          if (!purchasedRef.current && pixelSettings?.enabled && data.amountCents > 0) {
+          if (!purchasedRef.current && pixel?.enabled && data.amountCents > 0) {
             purchasedRef.current = true;
             metaPixelTrack(
               "Purchase",
@@ -110,7 +116,7 @@ function CheckoutPage() {
                 content_name: data.planName,
                 order_id: data.orderId,
               },
-              pixelSettings,
+              pixel,
             );
           }
           setUnlockedOrderId(data.orderId);
@@ -155,6 +161,20 @@ function CheckoutPage() {
       setCustomer(data.customer);
       setError(data.pixError ?? null);
       if (data.status === "paid" && data.canAccessResults) {
+        const pixel = pixelSettingsRef.current;
+        if (!purchasedRef.current && pixel?.enabled && data.amountCents > 0) {
+          purchasedRef.current = true;
+          metaPixelTrack(
+            "Purchase",
+            {
+              value: Math.round((data.amountCents / 100) * 100) / 100,
+              currency: "BRL",
+              content_name: data.planName,
+              order_id: data.orderId,
+            },
+            pixel,
+          );
+        }
         setUnlockedOrderId(data.orderId);
         setLastPath("/result");
         await navigate({ to: "/result" });

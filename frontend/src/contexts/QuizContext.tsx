@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { useEffect } from "react";
 import { clearQuizPhotos, loadQuizPhotos, saveQuizPhotos } from "@/lib/quiz-photo-storage";
+import { ensurePublicPlansLoaded } from "@/lib/public-api";
 
 export type QuizAnswers = Record<string, string>;
 
@@ -163,6 +164,13 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     if (!isHydrated) return;
     void saveQuizPhotos(photos);
   }, [photos, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated || typeof window === "undefined") return;
+    void ensurePublicPlansLoaded().catch(() => {
+      // planos opcionais na primeira carga
+    });
+  }, [isHydrated]);
 
   return (
     <QuizContext.Provider

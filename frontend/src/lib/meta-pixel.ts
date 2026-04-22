@@ -59,10 +59,12 @@ export function metaPixelTrack(
   settings?: MetaPixelSettings | null
 ) {
   if (typeof window === "undefined") return;
-  const opts: Record<string, unknown> = { ...payload };
-  if (settings?.metaTestEventCode) {
-    opts.eventID = settings.metaTestEventCode;
+  const testCode = settings?.metaTestEventCode?.trim();
+  const trackOptions = testCode ? { test_event_code: testCode } : undefined;
+  if (trackOptions) {
+    window.fbq?.("track", event, payload, trackOptions);
+  } else {
+    window.fbq?.("track", event, payload);
   }
-  window.fbq?.("track", event, opts);
 }
 
